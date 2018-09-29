@@ -16,7 +16,7 @@ const cors = require('cors');
 app.use(cors());
 app.options('*', cors());
 
-app.set('port', process.env.PORT || 7070);
+app.set('port', process.env.PORT || credentials.port);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser(credentials.cookieSecret));
 app.use(session({ resave: false, saveUninitialized: false, secret: credentials.cookieSecret }));
