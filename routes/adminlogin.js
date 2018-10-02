@@ -86,17 +86,32 @@ router.post('/refresh-token', (req, res) => {
     }
 });
 
-router.post('/test', (req, res)=>{
-	const token = req.headers['x-access-token'];
-	console.log('test token',token);
-	if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-	jwt.verify(token, credentials.tokenConfig.tokenSecret, function(err, decoded) {
-    if (err) return res.status(500).send({ auth: false, message: 'Помилка при перевірці токена авторизації.', error: err });
-    	console.log('decoded = ',decoded);
-    	res.send({sergiy: '33'});
-	});
-	
+router.get('/logout', (req, res)=>{
+    checkAuth(req, res, function (data) {
+        AdminLogin.findOne({_id: data.user_id}).exec()
+            .then(user=>{
+                user.set({refreshToken: '', refreshTokenLife: 0});
+                user.save().then(() => res.json({ message: 'Ви успішно вийшли з системи.' }))
+                    .catch((error)=>res.status(500).json(error))
+            })
+            .catch(error => res.status(500).json({ message: 'Не знайдений користувач в базі. Помилка при виході. ', error: error }))
+    })
 });
+
+router.post('/test', (req, res)=>{
+    checkAuth(req, res, function () {
+        res.send({test: 'success33'})
+    })
+});
+
+function checkAuth (req, res, callback) {
+    const token = req.headers['x-access-token'];
+    if (!token) return res.status(470).send({ auth: false, message: 'No token provided.' });
+    jwt.verify(token, credentials.tokenConfig.tokenSecret, function(err, decoded) {
+        if (err) return res.status(470).send({ auth: false, message: 'Помилка при перевірці токена авторизації.', error: err });
+        callback(decoded);
+    });
+};
 
 router.get('/user/info', (req, res) => {
          const test = new AdminLogin({username: 'test', role: 'superAdmin'});

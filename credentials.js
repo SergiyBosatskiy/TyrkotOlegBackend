@@ -4,8 +4,8 @@ module.exports = {
     tokenConfig: {
         tokenSecret: 'secretForToken',
         refreshTokenSecret: 'anotherSecretTokenForRefresh',
-        tokenLife: 18,
-        refreshTokenLife: 16
+        tokenLife: 1800,
+        refreshTokenLife: 3600
     },
     mongo: {
         development: { connectionString: 'mongodb://localhost/tyrkotShop'},
