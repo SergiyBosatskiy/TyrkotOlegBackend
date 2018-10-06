@@ -1,3 +1,4 @@
+'use strict'
 const express = require('express');
 const app = express();
 const fs = require('fs');
@@ -8,8 +9,8 @@ const formidable = require('formidable');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const credentials = require('./credentials');
-const adminRouter = require('./routes/admin');
-const adminLogin = require('./routes/adminlogin');
+const adminApp = require('./routes/admin/app');
+const adminLogin = require('./routes/admin/adminlogin');
 const cors = require('cors');
 
 // для кросдоменних запросів
@@ -46,9 +47,9 @@ const handlebars = require('express-handlebars').create({ defaultLayout: 'main',
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
-app.use('/admin', adminRouter);
-app.use('/admin', adminLogin); // маршрути провірки логіна адміна
 
+app.use('/admin', adminLogin); // маршрути провірки логіна адміна
+app.use('/admin', adminApp); // повинен бути останнім маршрутом в адмін роутах
 
 //error 404
 app.use(function (req, res, next) {

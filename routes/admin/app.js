@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const categorys = require('../models/categorys');
+const categorys = require('../../models/categorys');
+const path = require('path');
 
 /* Admin page */
-router.get('/', (req, res) => {
-    res.render('admin', {layout: false});
-});
+// router.get('/', (req, res) => {
+//     res.send()
+// });
+
 
 router.post('/categorys/add', async (req, res) => {
 	const postData = {
@@ -39,6 +41,11 @@ router.post('/categorys/edit', async (req, res) => {
 router.post('/categorys/delete', async (req, res) => {
    await categorys.remove({_id: req.body.element});
     res.json({"code":20000})
+});
+
+// підключення індексного файлу адмінки і перенаправлення всіх роутів на неї для 404 сторінки
+router.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../../public/admin/index.html'));
 });
 
 module.exports = router;

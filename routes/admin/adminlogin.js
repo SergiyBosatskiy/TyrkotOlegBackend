@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const AdminLogin = require('../models/adminLogin');
-const credentials = require('../credentials');
+const AdminLogin = require('../../models/adminLogin');
+const credentials = require('../../credentials');
 
 
 // провірка логіна і пароля для доступу в адмінку
