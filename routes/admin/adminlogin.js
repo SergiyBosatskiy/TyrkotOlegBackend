@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const AdminLogin = require('../../models/adminLogin');
 const credentials = require('../../credentials');
+const { checkAuth } = require('../../lib/adminUtils');
 
 
 // провірка логіна і пароля для доступу в адмінку
@@ -104,24 +105,11 @@ router.post('/test', (req, res)=>{
     })
 });
 
-function checkAuth (req, res, callback) {
-    const token = req.headers['x-access-token'];
-    if (!token) return res.status(470).send({ auth: false, message: 'No token provided.' });
-    jwt.verify(token, credentials.tokenConfig.tokenSecret, function(err, decoded) {
-        if (err) return res.status(470).send({ auth: false, message: 'Помилка при перевірці токена авторизації.', error: err });
-        callback(decoded);
-    });
-};
 
 router.get('/user/info', (req, res) => {
          const test = new AdminLogin({username: 'test', role: 'superAdmin'});
          test.setPassword('123456');
          test.save().then(()=>console.log('save success')).then(()=>res.send({eeee: 'eeew'})).catch((e)=>{res.send(e)});
-});
-
-router.post('/user/logout', (req, res) => {
-	const answer = {"code":20000,"data":"success"};
-	res.json(answer);
 });
 
 module.exports = router;

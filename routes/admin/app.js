@@ -2,12 +2,27 @@ const express = require('express');
 const router = express.Router();
 const categorys = require('../../models/categorys');
 const path = require('path');
+const os = require('os');
+const { checkAuth } = require('../../lib/adminUtils');
 
-/* Admin page */
-// router.get('/', (req, res) => {
-//     res.send()
-// });
-
+router.get('/systeminfo', (req, res) => {
+	checkAuth(req, res, function () {
+		const info = {
+			'ostype': os.type(),
+			'osrelease': os.release(),
+			'totalmem': Math.ceil(os.totalmem() / 1048576),
+			'freemem': Math.ceil(os.freemem() / 1048576),
+			'loadavg': os.loadavg(),
+			'cpu': os.cpus(),
+			'arch': os.arch(),
+			'ip': req.ip,
+			'uptime': os.uptime() / 60,
+			'hostname': os.hostname(),
+			'homedir': os.homedir()
+		};
+		res.json(info);
+    })
+});
 
 router.post('/categorys/add', async (req, res) => {
 	const postData = {

@@ -9,8 +9,6 @@ const formidable = require('formidable');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const credentials = require('./credentials');
-const adminApp = require('./routes/admin/app');
-const adminLogin = require('./routes/admin/adminlogin');
 const cors = require('cors');
 
 // для кросдоменних запросів
@@ -48,8 +46,8 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
 
-app.use('/admin', adminLogin); // маршрути провірки логіна адміна
-app.use('/admin', adminApp); // повинен бути останнім маршрутом в адмін роутах
+app.use('/admin', require('./routes/admin/adminlogin')); // маршрути провірки логіна адміна
+app.use('/admin', require('./routes/admin/app')); // повинен бути останнім маршрутом в адмін роутах
 
 //error 404
 app.use(function (req, res, next) {
